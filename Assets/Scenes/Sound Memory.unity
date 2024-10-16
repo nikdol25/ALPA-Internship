@@ -591,6 +591,8 @@ MonoBehaviour:
   - {fileID: 101934016}
   - {fileID: 1938133961}
   audioSource: {fileID: 193099481}
+  incorrectSound: {fileID: 8300000, guid: 2a70535528a87c94e989fddcd3d2be67, type: 3}
+  correctSound: {fileID: 8300000, guid: 687ce8b493423864893c118c61e8daa5, type: 3}
   replayButton: {fileID: 1568268380}
   canvas: {fileID: 1509318717}
 --- !u!4 &324621407

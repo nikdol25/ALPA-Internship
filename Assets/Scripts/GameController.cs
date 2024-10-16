@@ -17,6 +17,8 @@ public class GameController : MonoBehaviour
     public List<Image> animalPictureImages; // The draggable animal picture UI images
     public List<Image> animalSlots;  // Drop zones (slots) where animal images are dropped
     public AudioSource audioSource;  // AudioSource for playing sounds
+    public AudioClip incorrectSound; // AudioClip for the incorrect placement sound effect
+    public AudioClip correctSound;   // AudioClip for the correct placement sound effect
     public Button replayButton;  // Button to replay the sequence of sounds
     public Canvas canvas; // Reference to the Canvas
 
@@ -153,6 +155,9 @@ public class GameController : MonoBehaviour
                 // Increment correct match counter
                 correctMatches++;
 
+                // Play correct sound effect
+                PlayCorrectSound();
+
                 // Check if all animals are matched correctly
                 if (correctMatches == currentLevelAnimals.Count)
                 {
@@ -163,6 +168,7 @@ public class GameController : MonoBehaviour
             {
                 // Incorrect match
                 Debug.Log("Incorrect match, try again.");
+                PlayIncorrectSound(); // Play incorrect sound effect
             }
         }
         else
@@ -170,6 +176,18 @@ public class GameController : MonoBehaviour
             // Index is out of range, handle the error
             Debug.LogError("Drop zone index is out of range: " + dropZoneIndex);
         }
+    }
+
+    // Play sound effect for incorrect drop
+    private void PlayIncorrectSound()
+    {
+        audioSource.PlayOneShot(incorrectSound);  // Play incorrect placement sound
+    }
+
+    // Play sound effect for correct drop
+    private void PlayCorrectSound()
+    {
+        audioSource.PlayOneShot(correctSound);  // Play correct placement sound
     }
 
     // Move to the next level after all correct matches

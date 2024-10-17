@@ -14,8 +14,8 @@ public class GameController : MonoBehaviour
     }
 
     public List<Animal> animals; // List of all animals
-    public List<Image> animalPictureImages; // The draggable animal picture UI images
     public List<Image> animalSlots;  // Drop zones (slots) where animal images are dropped
+    public List<GameObject> draggableAnimals; // List of draggable animal game objects
     public AudioSource audioSource;  // AudioSource for playing sounds
     public AudioClip incorrectSound; // AudioClip for the incorrect placement sound effect
     public AudioClip correctSound;   // AudioClip for the correct placement sound effect
@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour
     public Canvas canvas; // Reference to the Canvas
 
     private List<Animal> currentLevelAnimals = new List<Animal>(); // Animals used for the current level
+    private Dictionary<GameObject, Vector2> initialPositions = new Dictionary<GameObject, Vector2>(); // Store initial positions
     private int currentLevel = 1;
     private int correctMatches = 0;  // Counter for correct matches
     private bool isPlayingSequence = false; // To prevent multiple plays at the same time
@@ -40,6 +41,7 @@ public class GameController : MonoBehaviour
     {
         correctMatches = 0; // Reset the correct match counter
         currentLevelAnimals.Clear(); // Clear the previous level's animals
+        initialPositions.Clear(); // Clear the initial positions dictionary
         int numberOfAnimals = GetNumberOfAnimalsForLevel(level);
 
         // Shuffle the animal list and select animals for the current level
@@ -47,8 +49,8 @@ public class GameController : MonoBehaviour
         shuffledAnimals.Shuffle();
         currentLevelAnimals = shuffledAnimals.GetRange(0, numberOfAnimals); // Get animals for this level
 
-        // Shuffle the arrangement of the animal pictures on screen
-        ShuffleAnimalPictures();
+        // Store initial positions of the draggable animals
+        StoreInitialPositions();
 
         // Activate the correct number of drop zones
         ActivateDropZones(numberOfAnimals);
@@ -57,30 +59,23 @@ public class GameController : MonoBehaviour
         StartCoroutine(PlaySoundsInSequence());
     }
 
-    // Method to shuffle and display the animal pictures randomly
-    private void ShuffleAnimalPictures()
+    // Store the initial positions of the draggable animal game objects
+    private void StoreInitialPositions()
     {
-        // Shuffle the images independently of the sound sequence
-        List<Animal> shuffledPictures = new List<Animal>(currentLevelAnimals);
-        shuffledPictures.Shuffle(); // Shuffle the images
-
-        // Make sure we don't exceed the number of available UI image slots
-        int availableSlots = Mathf.Min(shuffledPictures.Count, animalPictureImages.Count);
-
-        for (int i = 0; i < availableSlots; i++)
+        foreach (GameObject draggable in draggableAnimals)
         {
-            // Assign the shuffled images to the picture slots
-            animalPictureImages[i].sprite = shuffledPictures[i].image;
-            animalPictureImages[i].gameObject.SetActive(true); // Make sure the image is visible
-
-            // Attach the DragHandler and CanvasGroup to each image for dragging
-            animalPictureImages[i].GetComponent<DragHandler>().canvas = canvas;
+            RectTransform rectTransform = draggable.GetComponent<RectTransform>();
+            initialPositions[draggable] = rectTransform.anchoredPosition;
         }
+    }
 
-        // Hide any remaining image slots if they are not needed
-        for (int i = availableSlots; i < animalPictureImages.Count; i++)
+    // Reset all draggable animals to their initial positions
+    private void ResetAnimalPositions()
+    {
+        foreach (var item in initialPositions)
         {
-            animalPictureImages[i].gameObject.SetActive(false);
+            RectTransform rectTransform = item.Key.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = item.Value;
         }
     }
 
@@ -90,11 +85,16 @@ public class GameController : MonoBehaviour
         if (!isPlayingSequence) // Prevent playing multiple times simultaneously
         {
             isPlayingSequence = true;
-            foreach (var animal in currentLevelAnimals)
+
+            // Create a copy of the currentLevelAnimals list to safely enumerate over
+            List<Animal> animalsToPlay = new List<Animal>(currentLevelAnimals);
+
+            foreach (var animal in animalsToPlay)
             {
                 audioSource.PlayOneShot(animal.sound);  // Play the sound of the current animal
                 yield return new WaitForSeconds(2f);    // Wait for 2 seconds before playing the next sound
             }
+
             isPlayingSequence = false;
         }
     }
@@ -194,6 +194,10 @@ public class GameController : MonoBehaviour
     public void OnNextLevel()
     {
         Debug.Log("All animals matched! Moving to next level...");
+
+        // Reset positions of animals before moving to next level
+        ResetAnimalPositions();
+
         currentLevel++;
 
         // If you've reached the maximum level, you can restart from Level 1 or end the game

@@ -3,8 +3,8 @@ using UnityEngine.EventSystems;
 
 public class DropScript : MonoBehaviour, IDropHandler
 {
-    public GameController gameController; // Reference to the GameController
-    public int dropZoneIndex; // Index of this drop zone (linked to a specific animal)
+    public GameController gameController;
+    public int dropZoneIndex;
 
     public void OnDrop(PointerEventData eventData)
     {

@@ -433,7 +433,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -597,8 +597,8 @@ MonoBehaviour:
   - {fileID: 1917885153}
   - {fileID: 1389297039}
   audioSource: {fileID: 193099481}
-  incorrectSound: {fileID: 8300000, guid: 2a70535528a87c94e989fddcd3d2be67, type: 3}
-  correctSound: {fileID: 8300000, guid: 687ce8b493423864893c118c61e8daa5, type: 3}
+  incorrectSound: {fileID: 8300000, guid: 82675c7fb1e71a04ba78d27488419e69, type: 3}
+  correctSound: {fileID: 8300000, guid: 40d6a1a28216be641b4bc455594277f8, type: 3}
   replayButton: {fileID: 1568268380}
   canvas: {fileID: 1509318717}
 --- !u!4 &324621407

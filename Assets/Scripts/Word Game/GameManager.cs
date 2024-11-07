@@ -12,8 +12,13 @@ public class GameManager : MonoBehaviour
     public Transform dropZoneContainer;
     public GameObject letterPrefab;
     public GameObject dropZonePrefab;
+    public AudioClip letterClickSound;
 
-    private List<string> words = new List<string> { "JALGRATAS", "RONG", "BUSS", "AUTO" };
+    public AudioClip correctSound;
+    public AudioClip incorrectSound;
+    private AudioSource audioSource;
+
+    private List<string> words = new List<string> { "JALGRATAS", "RONG", "BUSS", "AUTO", "LENNUK", "LAEV" };
     private string currentWord;
     private int wordIndex = 0;
 
@@ -31,6 +36,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        audioSource = gameObject.AddComponent<AudioSource>();
         ShuffleWords();
         LoadNextWord();
     }
@@ -96,6 +102,39 @@ public class GameManager : MonoBehaviour
             }
         }
         return extraLetters;
+    }
+
+    public void PlayCorrectSound()
+    {
+        if (correctSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(correctSound);
+        }
+    }
+
+    public void PlayIncorrectSound()
+    {
+        if (incorrectSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(incorrectSound);
+        }
+    }
+
+    public void PlayLetterClickSound()
+    {
+        if (letterClickSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(letterClickSound);
+        }
+    }
+
+    public char GetExpectedLetter(int index)
+    {
+        if (index >= 0 && index < currentWord.Length)
+        {
+            return currentWord[index];
+        }
+        return '\0';
     }
 
     public void CheckWordCompletion()

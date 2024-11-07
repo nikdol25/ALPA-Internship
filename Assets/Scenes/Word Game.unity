@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -323, y: -159}
+  m_AnchoredPosition: {x: -370, y: -90}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &251270347
@@ -259,8 +259,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -390}
-  m_SizeDelta: {x: 800, y: 250}
+  m_AnchoredPosition: {x: 0, y: -376}
+  m_SizeDelta: {x: 1500, y: 270}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &698667288
 MonoBehaviour:
@@ -714,6 +714,9 @@ MonoBehaviour:
   dropZoneContainer: {fileID: 251270346}
   letterPrefab: {fileID: 1849146331255510814, guid: 8dc9cc028a62672419c890b97fb98f5c, type: 3}
   dropZonePrefab: {fileID: 9093639864338159953, guid: 141f496e35a275e499a7600ca935a140, type: 3}
+  letterClickSound: {fileID: 8300000, guid: eda550485a766ae4db32dba6b1fb0bae, type: 3}
+  correctSound: {fileID: 8300000, guid: 40d6a1a28216be641b4bc455594277f8, type: 3}
+  incorrectSound: {fileID: 8300000, guid: 82675c7fb1e71a04ba78d27488419e69, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

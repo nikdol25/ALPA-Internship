@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Menu UI.unity
     guid: 6fe2f80210264c643869e86ab3ddf3da
+  - enabled: 1
+    path: Assets/Scenes/Word Game.unity
+    guid: f9c7a55ccbe631341b2d5b1380783783
+  - enabled: 1
+    path: Assets/Scenes/Sound Memory.unity
+    guid: 8e2376d9e7e202b4883d1655ae46c4f4
   m_configObjects: {}

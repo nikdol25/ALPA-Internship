@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
     private string currentWord;
     private int wordIndex = 0;
 
+    public GameObject victoryPanel; // Reference to the Victory UI panel
+
     void Awake()
     {
         if (Instance == null)
@@ -51,7 +53,7 @@ public class GameManager : MonoBehaviour
     {
         if (wordIndex >= words.Count)
         {
-            Debug.Log("Game Completed!");
+            ShowVictoryScreen();
             return;
         }
 
@@ -157,5 +159,14 @@ public class GameManager : MonoBehaviour
             Debug.Log("Word Completed: " + currentWord);
             LoadNextWord();
         }
+    }
+
+    private void ShowVictoryScreen()
+    {
+        if (victoryPanel != null)
+        {
+            victoryPanel.SetActive(true); // Show the victory panel
+        }
+        Debug.Log("Game Completed! Victory Screen Shown.");
     }
 }

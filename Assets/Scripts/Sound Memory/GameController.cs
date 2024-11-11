@@ -8,8 +8,8 @@ public class GameController : MonoBehaviour
     [System.Serializable]
     public class Animal
     {
-        public string name;     
-        public Sprite image;    
+        public string name;
+        public Sprite image;
         public AudioClip sound;
     }
 
@@ -21,6 +21,7 @@ public class GameController : MonoBehaviour
     public AudioClip correctSound;
     public Button replayButton;
     public Canvas canvas;
+    public GameObject victoryPanel;
 
     private List<Animal> currentLevelAnimals = new List<Animal>();
     private Dictionary<GameObject, Vector2> initialPositions = new Dictionary<GameObject, Vector2>();
@@ -32,6 +33,7 @@ public class GameController : MonoBehaviour
     {
         LoadLevel(currentLevel);
         replayButton.onClick.AddListener(ReplaySounds);
+        victoryPanel.SetActive(false);
     }
 
     public void LoadLevel(int level)
@@ -174,11 +176,18 @@ public class GameController : MonoBehaviour
 
         if (currentLevel > 4)
         {
-            Debug.Log("All levels completed. Restarting from Level 1.");
-            currentLevel = 1;
+            ShowVictoryScreen();
         }
+        else
+        {
+            LoadLevel(currentLevel);
+        }
+    }
 
-        LoadLevel(currentLevel);
+    private void ShowVictoryScreen()
+    {
+        Debug.Log("All levels completed. Victory!");
+        victoryPanel.SetActive(true);
     }
 }
 

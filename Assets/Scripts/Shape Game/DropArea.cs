@@ -4,15 +4,23 @@ using UnityEngine.UI;
 
 public class DropArea : MonoBehaviour, IDropHandler
 {
-    public string shapeName;
     private Image dropAreaImage;
-    private ShapeManager shapeManager;
+    private Color expectedColor;
 
     void Start()
     {
         dropAreaImage = GetComponent<Image>();
-        shapeManager = FindObjectOfType<ShapeManager>();
-        dropAreaImage.color = shapeManager.GetShapeColor(shapeName);
+
+        // Get the expected color from the manager
+        DraggableShapesManager manager = FindObjectOfType<DraggableShapesManager>();
+        if (manager != null)
+        {
+            expectedColor = manager.GetAssignedColor(dropAreaImage);
+        }
+        else
+        {
+            expectedColor = dropAreaImage.color; // Fallback
+        }
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -20,15 +28,29 @@ public class DropArea : MonoBehaviour, IDropHandler
         GameObject droppedObject = eventData.pointerDrag;
         if (droppedObject != null)
         {
-            DraggableShape draggableShape = droppedObject.GetComponent<DraggableShape>();
             Image draggableImage = droppedObject.GetComponent<Image>();
+            Color draggableColor = draggableImage.color;
 
-            // Check if shape and color match
-            if (draggableShape != null && draggableImage.color == dropAreaImage.color && droppedObject.name == shapeName)
+            if (draggableColor == expectedColor)
             {
+                // Snap the shape to the drop zone
                 droppedObject.transform.SetParent(transform);
                 droppedObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                GameOrganizer.Instance.CheckWinCondition();
+
+                // Disable dragging for this shape
+                DraggableShape draggable = droppedObject.GetComponent<DraggableShape>();
+                if (draggable != null)
+                {
+                    draggable.enabled = false;
+                }
+
+                Debug.Log($"{droppedObject.name} correctly placed in {name} Drop Zone.");
+            }
+            else
+            {
+                // Return the shape to its original position
+                droppedObject.GetComponent<DraggableShape>().ReturnToStart();
+                Debug.LogWarning($"{droppedObject.name} does not match the color of {name} Drop Zone.");
             }
         }
     }

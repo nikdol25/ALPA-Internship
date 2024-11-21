@@ -3,6 +3,8 @@ using UnityEngine.EventSystems;
 
 public class DraggableShape : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public string shapeType; // Set this in the Inspector (e.g., "Square", "Circle")
+
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     private Vector2 originalPosition;

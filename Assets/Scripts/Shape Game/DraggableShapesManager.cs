@@ -15,11 +15,21 @@ public class DraggableShapesManager : MonoBehaviour
         Color.red, Color.green, Color.blue, Color.yellow,
         new Color(0.6f, 0.3f, 0.0f), // brown
         new Color(0.5f, 0.0f, 0.5f), // purple
-        Color.cyan, Color.magenta, Color.gray
+        Color.cyan, Color.magenta, Color.gray,
+        Color.black, Color.white, // New colors
+        new Color(1.0f, 0.65f, 0.0f), // orange
+        new Color(0.54f, 0.17f, 0.89f), // indigo
+        new Color(0.25f, 0.88f, 0.82f), // turquoise
+        new Color(0.98f, 0.5f, 0.45f) // coral
     };
 
     void Start()
     {
+        if (dropAreaShapes.Count > colors.Length)
+        {
+            Debug.LogWarning("Not enough unique colors for all drop zones. Some colors will repeat.");
+        }
+
         RandomizeShapePositions();
         AssignColorsToShapes();
     }
@@ -64,6 +74,8 @@ public class DraggableShapesManager : MonoBehaviour
 
         for (int i = 0; i < dropAreaShapes.Count; i++)
         {
+            if (i >= draggableShapes.Count || i >= duplicateShapes.Count) break;
+
             // Assign a random color to each drop area shape
             Color assignedColor = availableColors[i % availableColors.Count];
             dropAreaShapes[i].color = assignedColor;
@@ -79,6 +91,10 @@ public class DraggableShapesManager : MonoBehaviour
 
             // Store the assigned color
             assignedColors[dropAreaShapes[i]] = assignedColor;
+
+            Debug.Log($"DropZone {dropAreaShapes[i].name} assigned color {ColorToString(assignedColor)}");
+            Debug.Log($"Draggable Shape {draggableShapes[i].name} assigned color {ColorToString(assignedColor)}");
+            Debug.Log($"Duplicate Shape {duplicateShapes[i].name} assigned different color {ColorToString(differentColor)}");
         }
     }
 
@@ -89,7 +105,15 @@ public class DraggableShapesManager : MonoBehaviour
 
     public Color GetAssignedColor(Image dropAreaImage)
     {
-        return assignedColors.ContainsKey(dropAreaImage) ? assignedColors[dropAreaImage] : Color.clear;
+        if (assignedColors.ContainsKey(dropAreaImage))
+        {
+            return assignedColors[dropAreaImage];
+        }
+        else
+        {
+            Debug.LogWarning($"Color not found for DropZone {dropAreaImage.name}. Defaulting to transparent.");
+            return Color.clear; // Default to transparent if no color is found
+        }
     }
 
     private Color GetRandomDifferentColor(List<Color> availableColors, Color excludeColor)
@@ -108,5 +132,10 @@ public class DraggableShapesManager : MonoBehaviour
             list[i] = list[randomIndex];
             list[randomIndex] = temp;
         }
+    }
+
+    private string ColorToString(Color color)
+    {
+        return $"R:{color.r:F2}, G:{color.g:F2}, B:{color.b:F2}, A:{color.a:F2}";
     }
 }

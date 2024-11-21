@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public class DraggableShape : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public string shapeType; // Set this in the Inspector (e.g., "Square", "Circle")
+    public string shapeType;
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
@@ -17,7 +17,6 @@ public class DraggableShape : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     void Start()
     {
-        // Ask the DraggableShapesManager for the initial position
         DraggableShapesManager manager = FindObjectOfType<DraggableShapesManager>();
         if (manager != null)
         {
@@ -25,7 +24,7 @@ public class DraggableShape : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         }
         else
         {
-            originalPosition = rectTransform.anchoredPosition; // Fallback
+            originalPosition = rectTransform.anchoredPosition;
         }
     }
 
@@ -43,7 +42,6 @@ public class DraggableShape : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         canvasGroup.blocksRaycasts = true;
 
-        // If the object is not dropped in a valid drop zone, return it to its original position
         if (transform.parent == transform.root)
         {
             ReturnToStart();

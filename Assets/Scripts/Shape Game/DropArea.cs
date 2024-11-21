@@ -4,22 +4,21 @@ using UnityEngine.UI;
 
 public class DropArea : MonoBehaviour, IDropHandler
 {
-    public string shapeType; // Set this in the Inspector (e.g., "Square", "Circle")
+    public string shapeType;
 
     private Image dropAreaImage;
     private Color expectedColor;
 
     [Header("Audio Settings")]
-    public AudioClip correctSound; // Assign in the Inspector
-    public AudioClip incorrectSound; // Assign in the Inspector
+    public AudioClip correctSound;
+    public AudioClip incorrectSound;
     private AudioSource audioSource;
 
     void Start()
     {
         dropAreaImage = GetComponent<Image>();
-        audioSource = gameObject.AddComponent<AudioSource>(); // Add AudioSource component at runtime
+        audioSource = gameObject.AddComponent<AudioSource>();
 
-        // Get the expected color from the manager
         DraggableShapesManager manager = FindObjectOfType<DraggableShapesManager>();
         if (manager != null)
         {
@@ -27,7 +26,7 @@ public class DropArea : MonoBehaviour, IDropHandler
         }
         else
         {
-            expectedColor = dropAreaImage.color; // Fallback
+            expectedColor = dropAreaImage.color;
         }
 
         Debug.Log($"{name} DropArea initialized with expected color {ColorToString(expectedColor)}");
@@ -46,27 +45,21 @@ public class DropArea : MonoBehaviour, IDropHandler
 
                 Debug.Log($"Dropped {droppedObject.name} (Type: {droppedShapeType}) on {name} (Type: {shapeType}). Draggable Color: {ColorToString(draggableColor)}, Expected Color: {ColorToString(expectedColor)}");
 
-                // Validate both shape type and color
                 if (droppedShapeType == shapeType && ColorsMatch(draggableColor, expectedColor))
                 {
-                    // Snap the shape to the drop zone
                     droppedObject.transform.SetParent(transform);
                     droppedObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 
-                    // Disable dragging for this shape
                     draggableShape.enabled = false;
 
-                    // Play correct sound
                     PlaySound(correctSound);
 
                     Debug.Log($"{droppedObject.name} correctly placed in {name} Drop Zone.");
                 }
                 else
                 {
-                    // Return the shape to its original position
                     draggableShape.ReturnToStart();
 
-                    // Play incorrect sound
                     PlaySound(incorrectSound);
 
                     Debug.LogWarning($"{droppedObject.name} does not match the type or color of {name} Drop Zone.");

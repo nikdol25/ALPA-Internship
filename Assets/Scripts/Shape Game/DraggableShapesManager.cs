@@ -4,23 +4,23 @@ using System.Collections.Generic;
 
 public class DraggableShapesManager : MonoBehaviour
 {
-    public List<RectTransform> draggableShapes; // Assign original draggable shapes in the Inspector
-    public List<RectTransform> duplicateShapes; // Assign duplicate draggable shapes in the Inspector
-    public List<Image> dropAreaShapes; // Assign all drop area shapes in the Inspector
+    public List<RectTransform> draggableShapes;
+    public List<RectTransform> duplicateShapes;
+    public List<Image> dropAreaShapes;
 
     private Dictionary<RectTransform, Vector2> initialPositions = new Dictionary<RectTransform, Vector2>();
     private Dictionary<Image, Color> assignedColors = new Dictionary<Image, Color>();
 
     private Color[] colors = {
         Color.red, Color.green, Color.blue, Color.yellow,
-        new Color(0.6f, 0.3f, 0.0f), // brown
-        new Color(0.5f, 0.0f, 0.5f), // purple
+        new Color(0.6f, 0.3f, 0.0f),
+        new Color(0.5f, 0.0f, 0.5f),
         Color.cyan, Color.magenta, Color.gray,
-        Color.black, Color.white, // New colors
-        new Color(1.0f, 0.65f, 0.0f), // orange
-        new Color(0.54f, 0.17f, 0.89f), // indigo
-        new Color(0.25f, 0.88f, 0.82f), // turquoise
-        new Color(0.98f, 0.5f, 0.45f) // coral
+        Color.black, Color.white,
+        new Color(1.0f, 0.65f, 0.0f),
+        new Color(0.54f, 0.17f, 0.89f),
+        new Color(0.25f, 0.88f, 0.82f),
+        new Color(0.98f, 0.5f, 0.45f)
     };
 
     void Start()
@@ -38,7 +38,6 @@ public class DraggableShapesManager : MonoBehaviour
     {
         List<Vector2> positions = new List<Vector2>();
 
-        // Store the original positions of the shapes
         foreach (RectTransform shape in draggableShapes)
         {
             positions.Add(shape.anchoredPosition);
@@ -48,10 +47,8 @@ public class DraggableShapesManager : MonoBehaviour
             positions.Add(duplicate.anchoredPosition);
         }
 
-        // Shuffle the positions
         ShuffleList(positions);
 
-        // Assign the shuffled positions and store them as initial positions
         int index = 0;
         foreach (RectTransform shape in draggableShapes)
         {
@@ -76,20 +73,16 @@ public class DraggableShapesManager : MonoBehaviour
         {
             if (i >= draggableShapes.Count || i >= duplicateShapes.Count) break;
 
-            // Assign a random color to each drop area shape
             Color assignedColor = availableColors[i % availableColors.Count];
             dropAreaShapes[i].color = assignedColor;
 
-            // Assign the same color to the matching draggable shape
             Image draggableImage = draggableShapes[i].GetComponent<Image>();
             draggableImage.color = assignedColor;
 
-            // Assign a different random color to the duplicate
             Color differentColor = GetRandomDifferentColor(availableColors, assignedColor);
             Image duplicateImage = duplicateShapes[i].GetComponent<Image>();
             duplicateImage.color = differentColor;
 
-            // Store the assigned color
             assignedColors[dropAreaShapes[i]] = assignedColor;
 
             Debug.Log($"DropZone {dropAreaShapes[i].name} assigned color {ColorToString(assignedColor)}");
@@ -112,7 +105,7 @@ public class DraggableShapesManager : MonoBehaviour
         else
         {
             Debug.LogWarning($"Color not found for DropZone {dropAreaImage.name}. Defaulting to transparent.");
-            return Color.clear; // Default to transparent if no color is found
+            return Color.clear;
         }
     }
 

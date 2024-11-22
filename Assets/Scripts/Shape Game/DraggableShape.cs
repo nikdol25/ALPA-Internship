@@ -3,20 +3,24 @@ using UnityEngine.EventSystems;
 
 public class DraggableShape : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public string shapeType;
+    public string shapeType; // Set this in the Inspector (e.g., "Square", "Circle")
+    public AudioClip dragSound; // Sound to play when dragging starts
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     private Vector2 originalPosition;
+    private AudioSource audioSource;
 
     void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
+        audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     void Start()
     {
+        // Ask the DraggableShapesManager for the initial position
         DraggableShapesManager manager = FindObjectOfType<DraggableShapesManager>();
         if (manager != null)
         {
@@ -24,13 +28,16 @@ public class DraggableShape : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         }
         else
         {
-            originalPosition = rectTransform.anchoredPosition;
+            originalPosition = rectTransform.anchoredPosition; // Fallback
         }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
         canvasGroup.blocksRaycasts = false;
+
+        // Play drag sound
+        PlayDragSound();
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -42,6 +49,7 @@ public class DraggableShape : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         canvasGroup.blocksRaycasts = true;
 
+        // If the object is not dropped in a valid drop zone, return it to its original position
         if (transform.parent == transform.root)
         {
             ReturnToStart();
@@ -51,5 +59,13 @@ public class DraggableShape : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public void ReturnToStart()
     {
         rectTransform.anchoredPosition = originalPosition;
+    }
+
+    private void PlayDragSound()
+    {
+        if (dragSound != null)
+        {
+            audioSource.PlayOneShot(dragSound);
+        }
     }
 }
